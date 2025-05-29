@@ -1,9 +1,9 @@
-# lib/helpers.py
+def get_input(prompt):
+    try:
+        return input(prompt).strip()
+    except (KeyboardInterrupt, EOFError):
+        print("\nExiting.")
+        exit()
 
-def helper_1():
-    print("Performing useful function#1.")
-
-
-def exit_program():
-    print("Goodbye!")
-    exit()
+def print_error(message):
+    print(f"[ERROR] {message}")
