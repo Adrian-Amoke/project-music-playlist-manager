@@ -7,7 +7,7 @@ def run_cli():
     song_model = Song()
 
     while True:
-        print("\nMain Menu")
+        print("\nWelcome To The Main Menu! Choose an option")
         print("1. Playlists")
         print("2. Songs")
         print("3. Exit")
@@ -18,10 +18,10 @@ def run_cli():
         elif choice == "2":
             manage_songs(song_model)
         elif choice == "3":
-            print("Goodbye!")
+            print("Feel Free To Come Back!")
             break
         else:
-            print_error("Invalid choice.")
+            print_error("Invalid Choice! Choose a number in the choices given!")
 
 def manage_playlists(model):
     while True:
@@ -53,7 +53,7 @@ def manage_playlists(model):
         elif choice == "5":
             break
         else:
-            print_error("Invalid choice.")
+            print_error("Invalid Choice! Choose a number in the choices given!")
 
 def manage_songs(model):
     while True:
@@ -88,4 +88,4 @@ def manage_songs(model):
         elif choice == "5":
             break
         else:
-            print_error("Invalid choice.")
+            print_error("Invalid Choice! Choose a number in the choices given!")
