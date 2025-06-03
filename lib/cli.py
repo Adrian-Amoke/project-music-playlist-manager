@@ -33,9 +33,10 @@ def manage_playlists(model):
         print("\nPlaylists")
         print("1. Create Playlist")
         print("2. View All Playlists")
-        print("3. Update Playlist")
-        print("4. Delete Playlist")
-        print("5. Back")
+        print("3. View Songs in Playlist")
+        print("4. Update Playlist")
+        print("5. Delete Playlist")
+        print("6. Back")
         choice = get_input("Choose an option: ")
 
         if choice == "1":
@@ -44,34 +45,43 @@ def manage_playlists(model):
             print("Playlist created.")
         elif choice == "2":
             playlists = model.get_all()
-            print(f"{'ID':<5} {'Name':<40} {'Songs':<60} {'Reviews':<60}")
-            print("-" * 170)
-            from lib.models.song import Song
+            print(f"{'ID':<5} {'Name':<40} {'Reviews':<60}")
+            print("-" * 110)
             from lib.models.review import Review
-            song_model = Song()
             review_model = Review()
             for p in playlists:
-                songs = song_model.get_by_playlist(p[0])
-                if songs:
-                    displayed_songs = [s[1] for s in songs[:5]]
-                    song_titles = ", ".join(displayed_songs)
-                    if len(songs) > 5:
-                        song_titles += f", ... and {len(songs) - 5} more"
-                else:
-                    song_titles = "No songs"
                 reviews = review_model.get_by_playlist(p[0])
                 review_texts = ", ".join([r[1] for r in reviews]) if reviews else "No reviews"
-                print(f"{p[0]:<5} {p[1]:<40} {song_titles:<60} {review_texts:<60}")
+                print(f"{p[0]:<5} {p[1]:<40} {review_texts:<60}")
         elif choice == "3":
+            playlist_name = get_input("Enter Playlist name to view songs: ")
+            from lib.models.playlist import Playlist
+            playlist_model = Playlist()
+            playlist_id = playlist_model.get_id_by_name(playlist_name)
+            if playlist_id is None:
+                print_error(f"Playlist '{playlist_name}' not found.")
+                continue
+            from lib.models.song import Song
+            song_model = Song()
+            songs = song_model.get_by_playlist(playlist_id)
+            if songs:
+                print(f"Songs in Playlist '{playlist_name}':")
+                print(f"{'ID':<5} {'Title':<40} {'Artist':<30}")
+                print("-" * 75)
+                for s in songs:
+                    print(f"{s[0]:<5} {s[1]:<40} {s[2]:<30}")
+            else:
+                print("No songs found in this playlist.")
+        elif choice == "4":
             id_ = get_input("Playlist ID to update: ")
             new_name = get_input("New name: ")
             model.update(id_, new_name)
             print("Playlist updated.")
-        elif choice == "4":
+        elif choice == "5":
             id_ = get_input("Playlist ID to delete: ")
             model.delete(id_)
             print("Playlist deleted.")
-        elif choice == "5":
+        elif choice == "6":
             break
         else:
             print_error("Invalid Choice! Choose a number in the choices given!")
