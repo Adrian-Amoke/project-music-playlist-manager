@@ -52,7 +52,13 @@ def manage_playlists(model):
             review_model = Review()
             for p in playlists:
                 songs = song_model.get_by_playlist(p[0])
-                song_titles = ", ".join([s[1] for s in songs]) if songs else "No songs"
+                if songs:
+                    displayed_songs = [s[1] for s in songs[:5]]
+                    song_titles = ", ".join(displayed_songs)
+                    if len(songs) > 5:
+                        song_titles += f", ... and {len(songs) - 5} more"
+                else:
+                    song_titles = "No songs"
                 reviews = review_model.get_by_playlist(p[0])
                 review_texts = ", ".join([r[1] for r in reviews]) if reviews else "No reviews"
                 print(f"{p[0]:<5} {p[1]:<40} {song_titles:<60} {review_texts:<60}")
@@ -83,7 +89,13 @@ def manage_songs(model):
         if choice == "1":
             title = get_input("Title: ")
             artist = get_input("Artist: ")
-            playlist_id = get_input("Playlist ID: ")
+            playlist_name = get_input("Playlist name: ")
+            from lib.models.playlist import Playlist
+            playlist_model = Playlist()
+            playlist_id = playlist_model.get_id_by_name(playlist_name)
+            if playlist_id is None:
+                print_error(f"Playlist '{playlist_name}' not found.")
+                continue
             model.create(title, artist, playlist_id)
             print("Song created.")
         elif choice == "2":
@@ -134,7 +146,13 @@ def manage_reviews(model):
             playlist_id = None
             song_id = None
             if review_type == "1":
-                playlist_id = get_input("Playlist ID: ")
+                playlist_name = get_input("Playlist name: ")
+                from lib.models.playlist import Playlist
+                playlist_model = Playlist()
+                playlist_id = playlist_model.get_id_by_name(playlist_name)
+                if playlist_id is None:
+                    print_error(f"Playlist '{playlist_name}' not found.")
+                    continue
             elif review_type == "2":
                 song_id = get_input("Song ID: ")
             else:

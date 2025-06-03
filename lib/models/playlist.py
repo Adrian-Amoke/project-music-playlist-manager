@@ -30,3 +30,8 @@ class Playlist:
         CURSOR.execute("SELECT name FROM playlists WHERE id = ?", (playlist_id,))
         result = CURSOR.fetchone()
         return result[0] if result else None
+
+    def get_id_by_name(self, playlist_name):
+        CURSOR.execute("SELECT id FROM playlists WHERE name = ?", (playlist_name,))
+        result = CURSOR.fetchone()
+        return result[0] if result else None
