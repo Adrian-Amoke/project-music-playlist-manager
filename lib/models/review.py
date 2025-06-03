@@ -37,3 +37,11 @@ class Review:
     def delete(self, review_id):
         CURSOR.execute("DELETE FROM reviews WHERE id = ?", (review_id,))
         CONN.commit()
+
+    def get_by_playlist(self, playlist_id):
+        CURSOR.execute("SELECT * FROM reviews WHERE playlist_id = ?", (playlist_id,))
+        return CURSOR.fetchall()
+
+    def get_by_song(self, song_id):
+        CURSOR.execute("SELECT * FROM reviews WHERE song_id = ?", (song_id,))
+        return CURSOR.fetchall()

@@ -21,6 +21,10 @@ class Song:
         CURSOR.execute("SELECT * FROM songs")
         return CURSOR.fetchall()
 
+    def get_by_playlist(self, playlist_id):
+        CURSOR.execute("SELECT * FROM songs WHERE playlist_id = ?", (playlist_id,))
+        return CURSOR.fetchall()
+
     def update(self, song_id, new_title, new_artist):
         CURSOR.execute("UPDATE songs SET title = ?, artist = ? WHERE id = ?", (new_title, new_artist, song_id))
         CONN.commit()

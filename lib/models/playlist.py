@@ -25,3 +25,8 @@ class Playlist:
     def delete(self, playlist_id):
         CURSOR.execute("DELETE FROM playlists WHERE id = ?", (playlist_id,))
         CONN.commit()
+
+    def get_name_by_id(self, playlist_id):
+        CURSOR.execute("SELECT name FROM playlists WHERE id = ?", (playlist_id,))
+        result = CURSOR.fetchone()
+        return result[0] if result else None

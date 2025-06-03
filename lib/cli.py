@@ -44,8 +44,18 @@ def manage_playlists(model):
             print("Playlist created.")
         elif choice == "2":
             playlists = model.get_all()
+            print(f"{'ID':<5} {'Name':<40} {'Songs':<60} {'Reviews':<60}")
+            print("-" * 170)
+            from lib.models.song import Song
+            from lib.models.review import Review
+            song_model = Song()
+            review_model = Review()
             for p in playlists:
-                print(f"ID: {p[0]}, Name: {p[1]}")
+                songs = song_model.get_by_playlist(p[0])
+                song_titles = ", ".join([s[1] for s in songs]) if songs else "No songs"
+                reviews = review_model.get_by_playlist(p[0])
+                review_texts = ", ".join([r[1] for r in reviews]) if reviews else "No reviews"
+                print(f"{p[0]:<5} {p[1]:<40} {song_titles:<60} {review_texts:<60}")
         elif choice == "3":
             id_ = get_input("Playlist ID to update: ")
             new_name = get_input("New name: ")
@@ -78,8 +88,17 @@ def manage_songs(model):
             print("Song created.")
         elif choice == "2":
             songs = model.get_all()
+            from lib.models.playlist import Playlist
+            from lib.models.review import Review
+            playlist_model = Playlist()
+            review_model = Review()
+            print(f"{'ID':<5} {'Title':<40} {'Artist':<30} {'Playlist':<40} {'Reviews':<60}")
+            print("-" * 220)
             for s in songs:
-                print(f"ID: {s[0]}, Title: {s[1]}, Artist: {s[2]}, Playlist ID: {s[3]}")
+                playlist_name = playlist_model.get_name_by_id(s[3]) if s[3] else "No Playlist"
+                reviews = review_model.get_by_song(s[0])
+                review_texts = ", ".join([r[1] for r in reviews]) if reviews else "No reviews"
+                print(f"{s[0]:<5} {s[1]:<40} {s[2]:<30} {playlist_name:<40} {review_texts:<60}")
         elif choice == "3":
             id_ = get_input("Song ID to update: ")
             new_title = get_input("New Title: ")
@@ -125,8 +144,10 @@ def manage_reviews(model):
             print("Review created.")
         elif choice == "2":
             reviews = model.get_all()
+            print(f"{'ID':<5} {'Review':<70} {'Rating/5':<7} {'Playlist ID':<12} {'Song ID':<8}")
+            print("-" * 110)
             for r in reviews:
-                print(f"ID: {r[0]}, Review: {r[1]}, Rating: {r[2]}, Playlist ID: {r[3]}, Song ID: {r[4]}")
+                print(f"{r[0]:<5} {r[1]:<70} {r[2]:<7} {str(r[3]):<12} {str(r[4]):<8}")
         elif choice == "3":
             id_ = get_input("Review ID to update: ")
             new_review_text = get_input("New review text: ")
@@ -141,3 +162,4 @@ def manage_reviews(model):
             break
         else:
             print_error("Invalid Choice! Choose a number in the choices given!")
+
